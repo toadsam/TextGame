@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Xml.Linq;
 
@@ -13,6 +14,7 @@ namespace TextGame
         private static Inventory spartanarmor;
         private static Inventory bronzeaxe;
         private static Inventory spartaspear;
+        private static Inventory meat;
         static List<Inventory> Item = new List<Inventory>(); 
         static List<Inventory> StoreItem = new List<Inventory>();
         static void Main(string[] args)
@@ -25,20 +27,21 @@ namespace TextGame
          static void GameDataSetting()
         {
             // 캐릭터 정보 세팅
-             player = new Character("Chad", "전사", 1, 10, 5, 100, 1500);
+             player = new Character("재훈재훈", "전사", 1, 10, 5, 100, 1500);
             ironarmor = new Inventory("무쇠갑옷", "방어력 + ", 5, "무쇠로 만들어져 튼튼한 갑옷입니다.",false);
             trainingarmor = new Inventory("수련자 갑옷", "방어력 + ", 5, "수련에 도움을 주는 갑옷입니다.", false,1000,false);
             spartanarmor = new Inventory("무쇠갑옷", "방어력 + ", 15, "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.", false,3500,false);
             oldsword = new Inventory("낡은 검", "공격력 + ", 2, "쉽게 볼 수 있는 낡은 검 입니다.", false);
             bronzeaxe = new Inventory("청동 도끼", "공격력 + ", 5, "어디선가 사용됐던거 같은 도끼입니다.", false,1500,false);
             spartaspear = new Inventory("스파르타의 창", "공격력 + ", 7, "스파르타의 전사들이 사용했다는 전설의 창입니다.", false,2000,false);
+            meat = new Inventory("고기꼬기고기꼬기", "체력 + ", 2000, "고기다. 두고두고 먹을 수 있다. 엄청나다", false, 2, false);
             Item.Add(ironarmor);
             Item.Add(oldsword);
             StoreItem.Add(trainingarmor);
             StoreItem.Add(spartanarmor);
             StoreItem.Add(bronzeaxe);
             StoreItem.Add(spartaspear);
-
+            StoreItem.Add(meat);
             // 아이템 정보 세팅
         }
         
@@ -320,7 +323,7 @@ namespace TextGame
             Console.Clear();
 
             Console.WriteLine("상태보기");
-            Console.WriteLine("캐릭터의 정보르 표시합니다.");
+            Console.WriteLine("캐릭터의 정보를 표시합니다.");
             Console.WriteLine();
             Console.WriteLine($"{player.Name}({player.Job})");
             Console.WriteLine($"Lv.{player.Level}");
@@ -333,7 +336,8 @@ namespace TextGame
             AddAbility("방어력 + ");
 
 
-            Console.WriteLine($"체력 : {player.Hp}");
+            Console.Write($"체력 : {player.Hp}");
+            AddAbility("체력 + ");
             Console.WriteLine($"Gold : {player.Gold} G");
             Console.WriteLine();
             Console.WriteLine("0. 나가기");
