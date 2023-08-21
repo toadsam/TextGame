@@ -27,11 +27,11 @@ namespace TextGame
             // 캐릭터 정보 세팅
              player = new Character("Chad", "전사", 1, 10, 5, 100, 1500);
             ironarmor = new Inventory("무쇠갑옷", "방어력 + ", 5, "무쇠로 만들어져 튼튼한 갑옷입니다.",false);
-            trainingarmor = new Inventory("수련자 갑옷", "방어력 + ", 5, "수련에 도움을 주는 갑옷입니다.", false,1000);
-            spartanarmor = new Inventory("무쇠갑옷", "방어력 + ", 15, "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.", false,3500);
+            trainingarmor = new Inventory("수련자 갑옷", "방어력 + ", 5, "수련에 도움을 주는 갑옷입니다.", false,1000,false);
+            spartanarmor = new Inventory("무쇠갑옷", "방어력 + ", 15, "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.", false,3500,false);
             oldsword = new Inventory("낡은 검", "공격력 + ", 2, "쉽게 볼 수 있는 낡은 검 입니다.", false);
-            bronzeaxe = new Inventory("청동 도끼", "공격력 + ", 5, "어디선가 사용됐던거 같은 도끼입니다.", false,1500);
-            spartaspear = new Inventory("스파르타의 창", "공격력 + ", 7, "스파르타의 전사들이 사용했다는 전설의 창입니다.", false,2000);
+            bronzeaxe = new Inventory("청동 도끼", "공격력 + ", 5, "어디선가 사용됐던거 같은 도끼입니다.", false,1500,false);
+            spartaspear = new Inventory("스파르타의 창", "공격력 + ", 7, "스파르타의 전사들이 사용했다는 전설의 창입니다.", false,2000,false);
             Item.Add(ironarmor);
             Item.Add(oldsword);
             StoreItem.Add(trainingarmor);
@@ -42,7 +42,7 @@ namespace TextGame
             // 아이템 정보 세팅
         }
         
-        static void DisplayGameIntro()
+        static void DisplayGameIntro()       //게임초기화면 표시
         {
             Console.Clear();
 
@@ -73,7 +73,7 @@ namespace TextGame
 
         }
 
-        static void DisplayStore()
+        static void DisplayStore()    //상점화면 표시
         {
             Console.Clear();
             Console.WriteLine("상점");
@@ -87,12 +87,13 @@ namespace TextGame
             Console.WriteLine("[아이템 목록]");
             for (int i = 0; i < StoreItem.Count; i++)
             {
-                Console.WriteLine($"-{i + 1} {StoreItem[i].ItemName}    |  {StoreItem[i].WhatAbility}{StoreItem[i].AbilityNunber} | {StoreItem[i].Explanation}   |  {StoreItem[i].Gold}G");
+                Console.WriteLine($"-{StoreItem[i].ItemName}    |  {StoreItem[i].WhatAbility}{StoreItem[i].AbilityNunber} | {StoreItem[i].Explanation}   |  {StoreItem[i].Gold}G");
             }
+            Console.WriteLine("");
             Console.WriteLine("1. 아이템 구매");
             Console.WriteLine("0. 나가기");
 
-            int input = CheckValidInput(0, 0);
+            int input = CheckValidInput(0, 1);
             switch (input)
             {
                 case 0:
@@ -100,13 +101,13 @@ namespace TextGame
                     break;
 
                 case 1:
-
+                    DIsplayStoreSsll();
                     break;
             }
 
         }
 
-        static void DIsplayStoreSsll()
+        static void DIsplayStoreSsll()  //상점구매화면 표시
         {
             Console.Clear();
             Console.WriteLine("상점 - 아이템 구매");
@@ -118,19 +119,99 @@ namespace TextGame
             Console.WriteLine("");
 
             Console.WriteLine("[아이템 목록]");
-            for (int i = 0; i < StoreItem.Count; i++)
-            {
-                Console.WriteLine($"-{i + 1} {StoreItem[i].ItemName}    |  {StoreItem[i].WhatAbility}{StoreItem[i].AbilityNunber} | {StoreItem[i].Explanation}   |  {StoreItem[i].Gold}G");
-            }
-            Console.WriteLine("1. 아이템 구매");
+            StoreItemListPrint();
+            Console.WriteLine("");
+          
             Console.WriteLine("0. 나가기");
+            while (true)
+            {
+                if(SelectSell() == false)
+                {
+                    break;
+                }
+                Console.Clear();
+                Console.WriteLine("상점 - 아이템 구매");
+                Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
+                Console.WriteLine("");
+
+                Console.WriteLine("[보유 골드]");
+                Console.WriteLine($"{player.Gold} G");
+                Console.WriteLine("");
+
+                Console.WriteLine("[아이템 목록]");
+                StoreItemListPrint();
+                Console.WriteLine("");
+
+                Console.WriteLine("0. 나가기");
+            }
+            DisplayMyInfo();
         }
-        static void ItemListPrint()
+        static void StoreItemListPrint()     //상점구매리스트출력 메서드
+        {
+            for (int i = 0; i < StoreItem.Count; i++)   //상점리스트만큼 증가
+            {
+                if (StoreItem[i].IsSell == true)  // 상점이 플레이어에게 물건을 팔았다면
+                {
+                    Console.WriteLine($"-{i + 1} {StoreItem[i].ItemName}    |  {StoreItem[i].WhatAbility}{StoreItem[i].AbilityNunber} | {StoreItem[i].Explanation}   |  구매완료");  //구매완료 출력
+                }
+                else
+                {
+                    Console.WriteLine($"-{i + 1} {StoreItem[i].ItemName}    |  {StoreItem[i].WhatAbility}{StoreItem[i].AbilityNunber} | {StoreItem[i].Explanation}   |  {StoreItem[i].Gold}G");  //아이템의 골드 출룍
+                }
+            }
+        }
+
+        static bool SelectSell()  //어떤걸 사고 팔지 선택하는 메서드
+        {
+            int i = Convert.ToInt32(Console.ReadLine());  //사고 팔 아이템번호 입력받기        
+            if (i - 1 >= 0 && i - 1 < StoreItem.Count)    //입력받은 번호가 아이템리스트 인덱스안에 있다면
+            {
+                if (StoreItem[i - 1].IsSell == true) //이미 플레이어가 가지고 있다면
+                {
+                    StoreItem[i - 1].IsSell = false; //상점에 팔기
+                    player.Gold += (int)(StoreItem[i - 1].Gold * 0.85);  //돈 받기
+                    Item.Remove(StoreItem[i - 1]);   //플레이어가 가지고있는 인벤토리리스트에서 제거
+                    Console.WriteLine($"{player.Gold}G");
+                    Console.WriteLine("판매 완료!");
+                    Thread.Sleep(1000);
+                } 
+                else  //플레이어가 물건을 살 때
+                {              
+                  
+                    if (player.Gold >= StoreItem[i - 1].Gold)  //플레이어의 돈이 살 물건의 돈보다 같거나 많다면
+                    {
+                        StoreItem[i - 1].IsSell = true;   //물건사기
+                        player.Gold -= StoreItem[i - 1].Gold; //플레이어의 돈에서 물건 가격빼기
+                        Console.WriteLine($"{player.Gold}G");
+                        Item.Add(StoreItem[i - 1]);  //플레이어 아이템리스트에 추가
+                        Console.WriteLine("구매 완료!");
+                        Thread.Sleep(1000);
+                    }
+                    else
+                    {
+                        Console.WriteLine("금액이 부족합니다.");  
+                        Thread.Sleep(1000);
+                    }
+                }
+                return true;
+            }
+            else if (i == 0)  //0을 누르면
+            {
+
+                return false;  //false 반환 -> while문을 빠져나가기 위해서
+            }
+            else
+            {
+                Console.WriteLine("잘못된 입력입니다.");
+                return true;
+            }
+        }
+        static void ItemListPrint()  //플레이어 아이템출력 리스트
         {
             for (int i = 0; i < Item.Count; i++)
             {
                
-                if (Item[i].IsWearing == true)
+                if (Item[i].IsWearing == true)  //플레이어가 장착중인 아이템이라면
                 {
                     Console.WriteLine($"- [E]{Item[i].ItemName}    |  {Item[i].WhatAbility}{Item[i].AbilityNunber} | {Item[i].Explanation}");
                 }
@@ -140,7 +221,7 @@ namespace TextGame
                 }
             } 
         }
-        static void ItemManagementPrint(List<Inventory>item)
+        static void ItemManagementPrint()  //창착관리 출력 메서드 -> ItemListPrint()에 번호만 붙임
         {
             for (int i = 0; i < Item.Count; i++)
             {
@@ -156,7 +237,7 @@ namespace TextGame
             }
         }
        
-        static void DisplayItemManagement()
+        static void DisplayItemManagement()  //아이템관리 화면
         {
             Console.Clear();
 
@@ -164,15 +245,14 @@ namespace TextGame
             Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.");
             Console.WriteLine();
             Console.WriteLine("[아이템 목록]");
-            ItemManagementPrint(Item);
+            ItemManagementPrint();
 
             Console.WriteLine();
             Console.WriteLine("0. 나가기");
 
 
             while (true)
-            {
-                //SelectItem();
+            {          
                
                 if(SelectItem() == false)
                 {
@@ -183,7 +263,7 @@ namespace TextGame
                 Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.");
                 Console.WriteLine();
                 Console.WriteLine("[아이템 목록]");
-                ItemManagementPrint(Item);
+                ItemManagementPrint();
 
                 Console.WriteLine();
                 Console.WriteLine("0. 나가기");
@@ -191,28 +271,28 @@ namespace TextGame
             DisplayGameIntro();
         }
 
-        static bool SelectItem()
+        static bool SelectItem()  //장착선택 메서드
         {
 
             
-            int i = Convert.ToInt32(Console.ReadLine());
+            int i = Convert.ToInt32(Console.ReadLine());  //입력받기
             Console.WriteLine("i :" + i);
-            if (i-1>=0 && i-1 < Item.Count)
+            if (i-1>=0 && i-1 < Item.Count)  //입력받은 수-1이 아이템인덱스에 있다면
             {
-                if (Item[i-1].IsWearing == true)
+                if (Item[i-1].IsWearing == true)  //이미 장착중이라면
                 {                          
-                    Item[i - 1].IsWearing = false;
+                    Item[i - 1].IsWearing = false; //장착 해제
                 }
-                else
+                else //장착x였다면
                 {                   
-                    Item[i - 1].IsWearing = true;
+                    Item[i - 1].IsWearing = true;  //장착
                 }
                 return true;
             }
-            else if (i == 0)
+            else if (i == 0)  //0이면
             {
                 
-                return false;
+                return false;  //false반환 -> while문을 빠져나가기 위한 것
             }
             else
             {
@@ -221,15 +301,15 @@ namespace TextGame
             }
            
         }
-        static void AddAbility(string AbilityName)
+        static void AddAbility(string AbilityName)  //상태창에 장착한 아이템의 능력을 추가하는 메서드
         {
             for (int i = 0; i < Item.Count; i++)
             {
-                if (Item[i].IsWearing == true)
+                if (Item[i].IsWearing == true)  //장착한 옷이라면
                 {
-                    if (Item[i].WhatAbility == AbilityName)
+                    if (Item[i].WhatAbility == AbilityName)  //아이템의 능력과 입력받은 능력의 이름이 같으면
                     {
-                        Console.Write($"(+{Item[i].AbilityNunber})");
+                        Console.Write($"(+{Item[i].AbilityNunber})"); //출력
                     }
                 }
             }
@@ -265,9 +345,6 @@ namespace TextGame
                     DisplayGameIntro();
                     break;
 
-                case 1:
-                   
-                    break;
             }
         }
         

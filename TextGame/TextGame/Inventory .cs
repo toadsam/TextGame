@@ -18,6 +18,8 @@ namespace TextGame
         public bool IsWearing { get; set; }
 
         public int Gold { get; set; }
+
+        public bool IsSell { get; set; }
         public Inventory(string itemname, string whatabilit, int abilitynumber, string explantion, bool iswearing)
         {
             ItemName = itemname;
@@ -29,7 +31,7 @@ namespace TextGame
 
         }
 
-        public Inventory(string itemname, string whatabilit, int abilitynumber, string explantion, bool iswearing,int gold)
+        public Inventory(string itemname, string whatabilit, int abilitynumber, string explantion, bool iswearing,int gold , bool issell)
         {
             ItemName = itemname;
             WhatAbility = whatabilit;
@@ -37,7 +39,7 @@ namespace TextGame
             Explanation = explantion;
             IsWearing = iswearing;
             Gold = gold;
-
+            IsSell = issell; 
         }
     }
 }
