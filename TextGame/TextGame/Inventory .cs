@@ -11,7 +11,7 @@ namespace TextGame
         public string ItemName { get; }
         public string WhatAbility { get; }
 
-        public int AbilityNunber { get; }
+        public int AbilityNunber { get; set; }
 
         public string Explanation { get; }
 
