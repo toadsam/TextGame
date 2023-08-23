@@ -7,5 +7,5 @@ textgame project
 ### 개발 환경
 Visual Studio 2022
 ### 주요 기능
-**캐릭터**    
-* class Character
+**캐릭터** - [자세히 보기]()   
+//* class Character 
