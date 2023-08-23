@@ -13,7 +13,7 @@ Visual Studio 2022
 **아이템** - [자세히 보기](https://github.com/toadsam/TextGame/wiki/%EC%95%84%EC%9D%B4%ED%85%9C)  
 - 아이템 초기 설정
 
-**스파르타게임 실행** -[자세히 보기]()
+**스파르타게임 실행** - [자세히 보기](https://github.com/toadsam/TextGame/wiki/%EC%8A%A4%ED%8C%8C%EB%A5%B4%ED%83%80-%EB%8D%98%EC%A0%84%EC%9D%98-%ED%9D%90%EB%A6%84)
 - 게임시작 전 초기 설정
 - 캐릭터 인벤토리 
 - 상점 
